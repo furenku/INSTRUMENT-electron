@@ -15,8 +15,7 @@ const {app, BrowserWindow} = require('electron')
 var sc = require('supercolliderjs');
 var midi = require('midi');
 var scsynth;
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+
 let win
 
 function start() {
@@ -64,7 +63,7 @@ function startMIDI() {
       if ( velocity > 0 ) {
 
          console.log("note", note, "velocity", velocity);
-         scsynth.send.msg(['/s_new', 'i_sin_note',Math.floor(Math.random()*3000),[0,0, note, velocity] ]);
+         scsynth.send.msg(['/s_new', 'i_sin_note', note, 0, 0, [ 0, 0, note, 1, velocity] ]);
       }
 
    });
