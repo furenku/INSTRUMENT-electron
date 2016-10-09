@@ -1,0 +1,39 @@
+{
+  "name": "INSTRUMENT",
+  "version": "1.0.0",
+  "description": "Afterthought",
+  "main": "dist/INSTRUMENT.js",
+  "dependencies": {},
+  "devDependencies": {
+    "del": "^2.2.2",
+    "electron": "^1.4.3",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-cache": "^0.4.5",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-imagemin": "^3.0.3",
+    "gulp-jshint": "^2.0.1",
+    "gulp-livereload": "^3.8.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0",
+    "jshint": "^2.9.3",
+    "node-notifier": "^4.6.1"
+  },
+  "scripts": {
+    "test": "gulp ",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kernspaltung/hic-al.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kernspaltung/hic-al/issues"
+  },
+  "homepage": "https://github.com/kernspaltung/hic-al#readme"
+}
