@@ -15,6 +15,8 @@ const {app, BrowserWindow} = require('electron')
 var sc = require('supercolliderjs');
 var midi = require('midi');
 var scsynth;
+var synths;
+var lastNodeID;
 
 let win
 
@@ -22,7 +24,12 @@ function start() {
    createWindow();
    startSC();
    startMIDI();
+   startSynths();
 }
+function startSynths() {
+   synths = {};
+   lastNodeID = 0;
+};
 
 function createWindow () {
    // Create the browser window.
@@ -45,6 +52,7 @@ function createWindow () {
 }
 
 function startMIDI() {
+
    var input = new midi.input();
    var output = new midi.output();
 
@@ -62,8 +70,9 @@ function startMIDI() {
 
       if ( velocity > 0 ) {
 
-         console.log("note", note, "velocity", velocity);
-         scsynth.send.msg(['/s_new', 'i_sin_note', note, 0, 0, [ 0, 0, note, 1, velocity] ]);
+         scsynth.send.msg(['/s_new', 'i_sin_note', lastNodeID, 0, 0, [ 0, 0, note, 1, velocity ]]);
+         synths[note] = 1;
+         lastNodeID++;
       }
 
    });
@@ -79,6 +88,7 @@ function startMIDI() {
 
    input.openVirtualPort("INSTRUMENT");
    output.openVirtualPort("INSTRUMENT");
+
 }
 
 function startSC() {
@@ -93,7 +103,14 @@ function startSC() {
 
       server.callAndResponse(sc.msg.status())
       .then(function(reply) {
-         console.log(reply);
+         console.log(reply.rcvosc);
+
+      });
+
+      server.on('OSC', function(msg) {
+         if(msg[0]==='/n_end') {
+            synths[ msg[1] ] = 0;
+         }
       });
 
    });
