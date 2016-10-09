@@ -14,7 +14,7 @@ _| |_| |\  |____) |  | |  | | \ \| |__| | |  | | |____| |\  |  | |
 const {app, BrowserWindow} = require('electron')
 var sc = require('supercolliderjs');
 var midi = require('midi');
-
+var scsynth;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -57,23 +57,29 @@ function startMIDI() {
 
    // Configure a callback.
    input.on('message', function(deltaTime, message) {
-     // The message is an array of numbers corresponding to the MIDI bytes:
-     //   [status, data1, data2]
-     // https://www.cs.cf.ac.uk/Dave/Multimedia/node158.html has some helpful
-     // information interpreting the messages.
-     console.log('m:' + message + ' d:' + deltaTime);
+
+      var note = message[1];
+      var velocity = parseInt(message[2]);
+
+      if ( velocity > 0 ) {
+
+         console.log("note", note, "velocity", velocity);
+         scsynth.send.msg(['/s_new', 'i_sin_note',Math.floor(Math.random()*3000),[0,0, note, velocity] ]);
+      }
+
    });
 
-   input.openPort(0);
+   // input.openPort(0);
 
 
    output.getPortCount();
    output.getPortName(0);
-   output.openPort(0);
+   // output.openPort(0);
 
    output.sendMessage([176,22,1]);
 
-   output.closePort();
+   input.openVirtualPort("INSTRUMENT");
+   output.openVirtualPort("INSTRUMENT");
 }
 
 function startSC() {
@@ -82,7 +88,7 @@ function startSC() {
 
    sc.server.boot()
    .then(function(server) {
-
+      scsynth = server;
       server.send.msg(['/s_new', 'i_test1', (Math.floor(Math.random()*300))]);
 
 
