@@ -13,6 +13,7 @@ _| |_| |\  |____) |  | |  | | \ \| |__| | |  | | |____| |\  |  | |
 
 const {app, BrowserWindow} = require('electron')
 var sc = require('supercolliderjs');
+var midi = require('midi');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -20,7 +21,8 @@ let win
 
 function start() {
    createWindow();
-   createSCconnection();
+   startSC();
+   startMIDI();
 }
 
 function createWindow () {
@@ -43,25 +45,47 @@ function createWindow () {
 
 }
 
-var s;
-function createSCconnection() {
+function startMIDI() {
+   var input = new midi.input();
+   var output = new midi.output();
+
+   // Count the available input ports.
+   input.getPortCount();
+
+   // Get the name of a specified input port.
+   input.getPortName(0);
+
+   // Configure a callback.
+   input.on('message', function(deltaTime, message) {
+     // The message is an array of numbers corresponding to the MIDI bytes:
+     //   [status, data1, data2]
+     // https://www.cs.cf.ac.uk/Dave/Multimedia/node158.html has some helpful
+     // information interpreting the messages.
+     console.log('m:' + message + ' d:' + deltaTime);
+   });
+
+   input.openPort(0);
+
+
+   output.getPortCount();
+   output.getPortName(0);
+   output.openPort(0);
+
+   output.sendMessage([176,22,1]);
+
+   output.closePort();
+}
+
+function startSC() {
 
 
 
    sc.server.boot()
    .then(function(server) {
 
-      // raw send message
-   //   server.send.msg(['/g_new', 1, 0, 0]);
-
-      // using sc.msg to format them
-//      server.send.msg(sc.msg.groupNew(1));
-      
       server.send.msg(['/s_new', 'i_test1', (Math.floor(Math.random()*300))]);
 
 
-      // call async messages with callAndResponse
-      // and receive replies with a Promise
       server.callAndResponse(sc.msg.status())
       .then(function(reply) {
          console.log(reply);
@@ -69,51 +93,19 @@ function createSCconnection() {
 
    });
 
-   //
-   // supercolliderjs.resolveOptions().then(function(options) {
-   //
-   //    var SCLang = supercolliderjs.sclang;
-   // console.log( SCLang );
-   //    var lang = new SCLang(options);
-   //    lang.boot();
-   //
-   //    var Server = supercolliderjs.scsynth;
-   //    s = new Server(options);
-   //    console.log("Server", s);
-   //    s.boot().then(function(server) {
-   //       console.log("Server booted.");
-   //       s.msg(['/s_new', 'default', 440]);
-   //    });
-   //
-   //
-   //
-   //    var SCapi = scapi;
-   //    var api = new SCapi(options);
-   //    api.connect();
-   //
-   // });
-
 }
 
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', start )
 
-// Quit when all windows are closed.
 app.on('window-all-closed', () => {
-   // On macOS it is common for applications and their menu bar
-   // to stay active until the user quits explicitly with Cmd + Q
    if (process.platform !== 'darwin') {
       app.quit()
    }
 })
 
 app.on('activate', () => {
-   // On macOS it's common to re-create a window in the app when the
-   // dock icon is clicked and there are no other windows open.
    if (win === null) {
-      createWindow()
+      start()
    }
 })
