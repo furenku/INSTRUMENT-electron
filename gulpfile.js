@@ -30,7 +30,7 @@ var paths = {
    ],
    stylesheet: config.sassDir + '/'+config.projectName+'.scss',
    sass: [
-      config.bowerDir + '/bootstrap-sass/assets/stylesheets/',
+      config.bowerDir + '/foundation-sites/scss/',
       config.bowerDir + '/font-awesome/scss',
 
       config.utils + '/style_utils/scss',
@@ -38,8 +38,8 @@ var paths = {
       config.sassDir,
    ],
    js: [
-      config.bowerDir + '/jquery/dist/jquery.js',
-      config.bowerDir + '/bootstrap-sass/assets/javascripts/bootstrap.min.js',
+      // config.bowerDir + '/jquery/dist/jquery.min.js',
+      config.bowerDir + '/foundation-sites/dist/foundation.min.js',
       config.utils + '/js_utils/dist/js/js_utils.min.js',
       'src/js/*.js'
    ],
@@ -85,7 +85,7 @@ gulp.task('js', function() {
    // .pipe(jshint.reporter('default'))
    .pipe(concat( config.projectName + '.min.js'))
    // .pipe(concat( config.projectName + '.min.js'))
-   .pipe(uglify())
+   // .pipe(uglify())
    .pipe(gulp.dest('dist/assets/js'))
    // .pipe(rename({suffix: '.min'}))
    // .pipe(gulp.dest('dist/assets/js'))

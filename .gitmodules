@@ -1,0 +1,6 @@
+[submodule "recursos/style_utils"]
+	path = recursos/style_utils
+	url = https://github.com/kernspaltung/style_utils.git
+[submodule "recursos/js_utils"]
+	path = recursos/js_utils
+	url = https://github.com/kernspaltung/js_utils.git

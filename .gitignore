@@ -1,5 +1,4 @@
-dist
-node_modules
-bower_components
-recursos
 
+bower_components
+node_modules
+dist

@@ -11,20 +11,41 @@ _| |_| |\  |____) |  | |  | | \ \| |__| | |  | | |____| |\  |  | |
 */
 
 
-const {app, BrowserWindow} = require('electron')
+const electron = require('electron');
+// Module to control application life.
+const app = electron.app;
+// Module to create native browser window.
+const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
+
+// const {app, BrowserWindow} = require('electron')
+// const {ipcMain} = require('electron').ipcMain;
+
 var sc = require('supercolliderjs');
 var midi = require('midi');
+
 var scsynth;
 var synths;
 var lastNodeID;
 
+var testVar = 18;
+
 let win
 
 function start() {
+
+   // require('electron').remote.getGlobal('sharedObject').currentNote = note;
+
    createWindow();
    startSC();
    startMIDI();
    startSynths();
+
+
+   // app.on('synchronous-message', (event, arg) => {
+   //   console.log(arg)  // prints "ping"
+   //   event.returnValue = 'pong'
+   // })
 }
 function startSynths() {
    synths = {};
@@ -36,10 +57,11 @@ function createWindow () {
    win = new BrowserWindow({width: 1600, height: 800})
 
    // and load the index.html of the app.
+
    win.loadURL(`file://${__dirname}/INSTRUMENT.html`)
 
    // Open the DevTools.
-   win.webContents.openDevTools()
+   // win.webContents.openDevTools()
 
    // Emitted when the window is closed.
    win.on('closed', () => {
@@ -48,6 +70,10 @@ function createWindow () {
       // when you should delete the corresponding element.
       win = null
    })
+
+
+   // console.log("contents", win)
+
 
 }
 
@@ -70,12 +96,28 @@ function startMIDI() {
 
       if ( velocity > 0 ) {
 
-         scsynth.send.msg(['/s_new', 'i_sin_note', lastNodeID, 0, 0, [ 0, 0, note, 1, velocity ]]);
+         console.log('midi-note-on',note)
+
+         playNote(note,velocity);
          synths[note] = 1;
-         lastNodeID++;
+
+         win.webContents.send('midi-note-on' , { note: note, velocity: velocity })
+//         app.emit('midi-note-on',note)
+
       }
 
+
+
    });
+
+
+   ipcMain.on('gui-note-on', (event, arg) => {
+     console.log("gui-note-on", arg.note )  // prints "ping"
+     playNote(arg.note,arg.velocity);
+
+  // event.sender.send(...)
+     //event.sender.send('midi-note-on', note)
+   })
 
    // input.openPort(0);
 
@@ -103,7 +145,7 @@ function startSC() {
 
       server.callAndResponse(sc.msg.status())
       .then(function(reply) {
-         console.log(reply.rcvosc);
+         //console.log(reply.rcvosc);
 
       });
 
@@ -131,3 +173,12 @@ app.on('activate', () => {
       start()
    }
 })
+
+
+function playNote(note, velocity) {
+
+   scsynth.send.msg(['/s_new', 'i_sin_note', lastNodeID, 0, 0, [ 0, 0, note, 1, velocity ]]);
+
+   lastNodeID++;
+
+}

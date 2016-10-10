@@ -1,9 +1,9 @@
 {
   "name": "INSTRUMENT",
-  "description": "Music INSTRUMENT",
-  "main": "dist/index.html",
+  "description": "Afterthought",
+  "main": "dist/INSTRUMENT.js",
   "authors": [
-    "furenku"
+    "furenku <furenku@gmail.com>"
   ],
   "license": "ISC",
   "homepage": "https://github.com/kernspaltung/INSTRUMENT",
@@ -17,8 +17,9 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap-sass": "bootstrap-sass-official#^3.3.7",
-    "font-awesome": "fontawesome#^4.6.3",
-    "jquery": "^3.1.0",
+    "font-awesome": "^4.6.3",
+    "foundation-sites": "^6.2.3",
+    "jquery": "^3.1.1",
+    "what-input": "^4.0.1"
   }
 }

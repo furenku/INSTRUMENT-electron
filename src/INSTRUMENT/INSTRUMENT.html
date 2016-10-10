@@ -10,20 +10,32 @@
 </head>
 <body>
 
-<h1>
+<h1 class="mt2 mb3 p-5 color-neutral_claro-bd text-center">
 INSTRUMENT
 </h1>
+
+<section id="keyboard" class="keyboard columns p-5 font-s rel">
+   <div class="note white h-15-v abs text-center p-0 hidden">
+      <div class="color-black-bd color-neutral_claro-hover-bg"></div>
+   </div>
+   <div class="note black h-10-v abs text-center p-0 p-l-0-2 p-r-0 hidden">
+      <div class=" color-black-bg color-neutral_claro-hover-bg shadow"></div>
+
+   </div>
+</section>
+
 <div class="text">
    <ul>
-      <li>We are using node <script>document.write(process.versions.node)</script>,</li>
-      <li>Chrome <script>document.write(process.versions.chrome)</script>,</li>
-      <li>and Electron <script>document.write(process.versions.electron)</script>.</li>
+      <li>Node: <script>document.write(process.versions.node)</script>,</li>
+      <li>Chrome: <script>document.write(process.versions.chrome)</script>,</li>
+      <li>Electron: <script>document.write(process.versions.electron)</script>.</li>
    </ul>
 
 
 </div>
 </body>
 
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script>window.jQuery = window.$ = module.exports;</script>
 <script type="text/javascript" src="assets/js/INSTRUMENT.min.js"></script>
-
 </html>
