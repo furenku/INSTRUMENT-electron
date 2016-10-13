@@ -3,6 +3,10 @@ const electron = require('electron');
 // Module to control application life.
 const ipcRenderer = electron.ipcRenderer;
 
+var os = require('os');
+
+
+
 var u = new Utils();
 
 jQuery(document).ready(function($){
@@ -29,8 +33,6 @@ jQuery(document).ready(function($){
    console.log("INSTRUMENT: Front End");
    console.log('Cpu cores: ', os.cpus().length );
 })
-
-var os = require('os');
 
 function INSTRUMENT() {
 
