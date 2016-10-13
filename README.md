@@ -12,21 +12,22 @@ El enfoque de la investigación está en encontrar los modos y momentos en los q
 
 
 ###Algunas características actualmente en desarrollo:
--Tocar instrumentos electrónicos con controladores MIDI, y modificar sus parámetros.
--Introducir sus propios SynthDefs, y ejecutarlos con un controlador MIDI.
--Grabar patrones MIDI y reproducirlos en loop.
--Samplear en vivo y hacer composiciones basadas en loops.
--Controlar la dirección de la señal de audio.
--Rutear tus sonidos por efectos y mezclarlos.
--Utilizar cualquier cantidad de entradas y salidas de audio.
--Interfaz para Live Coding.
--Conectar interfaces directamente con Arduino.
+- Tocar instrumentos electrónicos con controladores MIDI, y modificar sus parámetros.
+- Introducir sus propios SynthDefs, y ejecutarlos con un controlador MIDI.
+- Grabar patrones MIDI y reproducirlos en loop.
+- Samplear en vivo y hacer composiciones basadas en loops.
+- Controlar la dirección de la señal de audio.
+- Rutear tus sonidos por efectos y mezclarlos.
+- Utilizar cualquier cantidad de entradas y salidas de audio.
+- Interfaz para Live Coding.
+- Conectar interfaces directamente con Arduino.
 
 
 
 ###Instalación
 ```
-git clone --recursive ...
+git clone --recursive https://github.com/kernspaltung/INSTRUMENT.git
+cd INSTRUMENT
 npm install
 bower install
 ```
@@ -45,3 +46,7 @@ npm start
 
 
 ###Herramientas
+
+electron (http://electron.atom.io)
+node.js (http://nodejs.org)
+SuperCollider.js (https://github.com/crucialfelix/supercolliderjs)
