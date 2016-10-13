@@ -1,8 +1,9 @@
 # INSTRUMENT
 
 INSTRUMENT es un sistema pensado para músicos o bandas que quieran integrar
-herramientas electrónicas a sus actos en vivo. INSTRUMENT es para ser ejecutado en vivo, como una extensión de los músicos y de los ensambles. La idea es que todos los sonidos electrónicos que podamos escuchar en un concierto provengan de acciones físicas de los ejecutantes.
+herramientas electrónicas a sus actos en vivo. INSTRUMENT es una extensión de los músicos y de los ensambles, ofreciendo control de sintetizadores y procesamiento de señal, a la vez que herramientas de audio para sampleo, live-looping y mezcla.
 
+La idea principal es que todos los sonidos electrónicos que podamos escuchar en un concierto provengan de acciones físicas de los músicos.
 
 Es una aplicación multiplataforma construida con HTML y Javascript, utilizando electron, supercolliderjs y node-midi. SuperCollider es el motor de audio.
 
