@@ -73,7 +73,6 @@ function INSTRUMENT() {
 
             var note_num = $(this).data('note');
 
-            $(this).siblings().removeClass('active');
             $(this).addClass('active');
 
             console.log('gui-note-on',note_num);
