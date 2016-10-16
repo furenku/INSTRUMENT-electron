@@ -91,6 +91,10 @@ function INSTRUMENT() {
             $('.keyboard .note').removeClass('active');
             $('.keyboard .note').eq( arg.note-35 ).addClass('active');
       })
+      ipcRenderer.on('midi-note-off', (event, arg) => {
+         console.log("note",arg) // prints "pong"
+         $('.keyboard .note').eq( arg.note-35 ).removeClass('active');
+      })
 
    }
 

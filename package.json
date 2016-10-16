@@ -21,6 +21,7 @@
     "gulp-uglify": "^2.0.0",
     "jshint": "^2.9.3",
     "midi": "^0.9.5",
+    "nanotimer": "^0.3.14",
     "node-notifier": "^4.6.1",
     "supercolliderjs": "^0.12.0"
   },

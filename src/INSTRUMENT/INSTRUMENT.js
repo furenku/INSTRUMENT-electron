@@ -1,11 +1,11 @@
 /*
 
-_____ _   _  _____ _______ _____  _    _ __  __ ______ _   _ _______
-|_   _| \ | |/ ____|__   __|  __ \| |  | |  \/  |  ____| \ | |__   __|
-| | |  \| | (___    | |  | |__) | |  | | \  / | |__  |  \| |  | |
-| | | . ` |\___ \   | |  |  _  /| |  | | |\/| |  __| | . ` |  | |
-_| |_| |\  |____) |  | |  | | \ \| |__| | |  | | |____| |\  |  | |
-|_____|_| \_|_____/   |_|  |_|  \_\\____/|_|  |_|______|_| \_|  |_|
+   _____ _   _  _____ _______ _____  _    _ __  __ ______ _   _ _______
+   |_   _| \ | |/ ____|__   __|  __ \| |  | |  \/  |  ____| \ | |__   __|
+   | | |  \| | (___    | |  | |__) | |  | | \  / | |__  |  \| |  | |
+   | | | . ` |\___ \   | |  |  _  /| |  | | |\/| |  __| | . ` |  | |
+   _| |_| |\  |____) |  | |  | | \ \| |__| | |  | | |____| |\  |  | |
+   |_____|_| \_|_____/   |_|  |_|  \_\\____/|_|  |_|______|_| \_|  |_|
 
 
 */
@@ -26,6 +26,7 @@ var midi = require('midi');
 
 var scsynth;
 var synths;
+
 var lastNodeID;
 
 var testVar = 18;
@@ -99,10 +100,13 @@ function startMIDI() {
          console.log('midi-note-on',note)
 
          playNote(note,velocity);
-         synths[note] = 1;
 
          win.webContents.send('midi-note-on' , { note: note, velocity: velocity })
 //         app.emit('midi-note-on',note)
+
+      } else {
+
+         win.webContents.send('midi-note-off' , { note: note })
 
       }
 
@@ -115,8 +119,6 @@ function startMIDI() {
      console.log("gui-note-on", arg.note )  // prints "ping"
      playNote(arg.note,arg.velocity);
 
-  // event.sender.send(...)
-     //event.sender.send('midi-note-on', note)
    })
 
    // input.openPort(0);
@@ -140,7 +142,7 @@ function startSC() {
    sc.server.boot()
    .then(function(server) {
       scsynth = server;
-      server.send.msg(['/s_new', 'i_test1', (Math.floor(Math.random()*300))]);
+      // server.send.msg(['/s_new', 'i_test1', (Math.floor(Math.random()*300))]);
 
 
       server.callAndResponse(sc.msg.status())
@@ -150,8 +152,17 @@ function startSC() {
       });
 
       server.on('OSC', function(msg) {
+         console.log();(msg)
          if(msg[0]==='/n_end') {
+
+            console.log( "msg:", msg );
+            console.log( "synths:", synths );
+            console.log( "synth:", synths[ msg[1] ] );
+
+            win.webContents.send('midi-note-off' , { note: synths[ msg[1] ][ "note" ] })
+
             synths[ msg[1] ] = 0;
+
          }
       });
 
@@ -178,6 +189,11 @@ app.on('activate', () => {
 function playNote(note, velocity) {
 
    scsynth.send.msg(['/s_new', 'i_sin_note', lastNodeID, 0, 0, [ 0, 0, note, 1, velocity ]]);
+
+   synths[lastNodeID] = {};
+
+   synths[lastNodeID]["note"] = note;
+   synths[lastNodeID]["synthdef"] = "i_sin_note";
 
    lastNodeID++;
 
