@@ -2,7 +2,7 @@ SynthDef(\INSTRUMENTtestTone1, {|outBus=0, amp=1, freq=330|
 
 	var sig = SinOsc.ar(freq) * EnvGen.kr( Env.perc, doneAction: 2 );
 
-	Out.ar( outBus, Pan2.ar( sig * amp, 0 ) );
+	Out.ar( outBus, sig * amp );
 
 }).store;
 
@@ -28,7 +28,7 @@ SynthDef(\INSTRUMENTmixerChannel, {|inBus, outBus, amp=1, pan=0|
 
 	out = Pan2.ar(in, pan);
 	// so that mixerchan bus can be used as postsendbus
-	ReplaceOut.ar(inBus, out);
+	/*ReplaceOut.ar(inBus, out);*/
 
    Out.ar(outBus, out * amp );
 

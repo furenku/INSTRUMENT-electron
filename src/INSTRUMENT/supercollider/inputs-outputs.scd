@@ -42,14 +42,16 @@ s.doWhenBooted({
       i.channels.put(1, Synth.head( i.synths, 'INSTRUMENTinput', [\inBus,2,\outBus,m.inBus+1]));
 
 
-      o.channels.put(0, Synth.tail( o.synths, 'INSTRUMENToutput', [\inBus,m.mixerBus,\amp,1]  ));
+      o.channels.put(0, Synth.tail( o.synths, 'INSTRUMENToutput', [\inBus,m.mixerBus,\outBus,0,\amp,1]  ));
+      o.channels.put(1, Synth.tail( o.synths, 'INSTRUMENToutput', [\inBus,m.mixerBus+1,\outBus,1,\amp,1]  ));
 
       4.do{|h|
          m.channels.put(h, Synth.tail( m.synths, 'INSTRUMENTmixerChannel', [\inBus,m.inBus+h,\outBus,m.mixerBus ]));
       };
 
-      m.channels[0].set(\pan,1);
-      m.channels[1].set(\pan, -1);
+      m.channels[0].set(\pan,  1 );
+
+      m.channels[1].set(\pan, -1 );
 
 
 
@@ -59,24 +61,8 @@ s.doWhenBooted({
 
 )
 
-/*
-m.channels.collect({|chan| chan.free });
-i.channels.collect({|chan| chan.free });
-o.channels.collect({|chan| chan.free });
-*/
-
-m.channels.collect({|chan| chan.set(\amp,0) });
-m.channels.collect({|chan| chan.set(\amp,1) });
-
-
-o.channels[0].set(\amp,0);
-o.channels[0].set(\amp,1);
-
-
-m.channels[0].set(\pan,-1);
-m.channels[1].set(\pan, -1);
 
 
 
-
-Synth(\INSTRUMENTtestTone1,[\outBus,48])
+Synth(\INSTRUMENTtestTone1,[\outBus,m.inBus]);
+Synth(\INSTRUMENTtestTone1,[\outBus,m.inBus+1]);
