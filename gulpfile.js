@@ -41,7 +41,8 @@ var paths = {
       // config.bowerDir + '/jquery/dist/jquery.min.js',
       config.bowerDir + '/foundation-sites/dist/foundation.min.js',
       config.utils + '/js_utils/dist/js/js_utils.min.js',
-      'src/js/*.js'
+      // 'src/js/*.js',
+      'src/**/*.js'
    ],
    fonts: [
       config.bowerDir + '/font-awesome/fonts/**.*'

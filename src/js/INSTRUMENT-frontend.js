@@ -89,6 +89,11 @@ function INSTRUMENT() {
         console.log("note",arg) // prints "pong"
             // $('.keyboard .note').removeClass('active');
             $('.keyboard .note').eq( arg.note-35 ).addClass('active');
+
+//          var img = $('<img>').attr('src','http://fakeimg.pl/400x200/');
+//       img.appendTo('body')
+// img.css({position:'absolute', top: Math.random()*400,left: Math.random()*400, width: 100, height:50})
+
       })
       ipcRenderer.on('midi-note-off', (event, arg) => {
          console.log("note",arg) // prints "pong"

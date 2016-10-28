@@ -12,163 +12,40 @@
 
 
 const electron = require('electron');
-// Module to control application life.
+
 const app = electron.app;
-// Module to create native browser window.
+
 const BrowserWindow = electron.BrowserWindow;
-const ipcMain = electron.ipcMain;
 
-// const {app, BrowserWindow} = require('electron')
-// const {ipcMain} = require('electron').ipcMain;
+// const ipcMain = electron.ipcMain;
+//
 
-var sc = require('supercolliderjs');
-var midi = require('midi');
+// var sc = require('supercolliderjs');
+// var midi = require('midi');
+// var osc = require('osc');
 
-var scsynth;
-var synths;
+// var scsynth;
+// var synths;
+//
+// var lastNodeID;
+//
+// var testVar = 18;
 
-var lastNodeID;
 
-var testVar = 18;
+
+
+// App Architecture:
+require('./controllers/NodeController.js');
+require('./controllers/SessionController.js');
+
+
+var nodeController;
+var sessionController;
 
 let win
 
-function start() {
-
-   // require('electron').remote.getGlobal('sharedObject').currentNote = note;
-
-   createWindow();
-   startSC();
-   startMIDI();
-   startSynths();
 
 
-   // app.on('synchronous-message', (event, arg) => {
-   //   console.log(arg)  // prints "ping"
-   //   event.returnValue = 'pong'
-   // })
-}
-function startSynths() {
-   synths = {};
-   lastNodeID = 0;
-};
-
-function createWindow () {
-   // Create the browser window.
-   win = new BrowserWindow({width: 1600, height: 800})
-
-   // and load the index.html of the app.
-
-   win.loadURL(`file://${__dirname}/INSTRUMENT.html`)
-
-   // Open the DevTools.
-   // win.webContents.openDevTools()
-
-   // Emitted when the window is closed.
-   win.on('closed', () => {
-      // Dereference the window object, usually you would store windows
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
-      win = null
-   })
-
-
-   // console.log("contents", win)
-
-
-}
-
-function startMIDI() {
-
-   var input = new midi.input();
-   var output = new midi.output();
-
-   // Count the available input ports.
-   input.getPortCount();
-
-   // Get the name of a specified input port.
-   input.getPortName(0);
-
-   // Configure a callback.
-   input.on('message', function(deltaTime, message) {
-
-      var note = message[1];
-      var velocity = parseInt(message[2]);
-
-      if ( velocity > 0 ) {
-
-         console.log('midi-note-on',note)
-
-         playNote(note,velocity);
-
-         win.webContents.send('midi-note-on' , { note: note, velocity: velocity })
-//         app.emit('midi-note-on',note)
-
-      } else {
-
-         win.webContents.send('midi-note-off' , { note: note })
-
-      }
-
-
-
-   });
-
-
-   ipcMain.on('gui-note-on', (event, arg) => {
-     console.log("gui-note-on", arg.note )  // prints "ping"
-     playNote(arg.note,arg.velocity);
-
-   })
-
-   // input.openPort(0);
-
-
-   output.getPortCount();
-   output.getPortName(0);
-   // output.openPort(0);
-
-   output.sendMessage([176,22,1]);
-
-   input.openVirtualPort("INSTRUMENT");
-   output.openVirtualPort("INSTRUMENT");
-
-}
-
-function startSC() {
-
-
-
-   sc.server.boot()
-   .then(function(server) {
-      scsynth = server;
-      // server.send.msg(['/s_new', 'i_test1', (Math.floor(Math.random()*300))]);
-
-
-      server.callAndResponse(sc.msg.status())
-      .then(function(reply) {
-         //console.log(reply.rcvosc);
-
-      });
-
-      server.on('OSC', function(msg) {
-         console.log();(msg)
-         if(msg[0]==='/n_end') {
-
-            console.log( "msg:", msg );
-            console.log( "synths:", synths );
-            console.log( "synth:", synths[ msg[1] ] );
-
-            win.webContents.send('midi-note-off' , { note: synths[ msg[1] ][ "note" ] })
-
-            synths[ msg[1] ] = 0;
-
-         }
-      });
-
-   });
-
-}
 
 
 app.on('ready', start )
@@ -186,15 +63,50 @@ app.on('activate', () => {
 })
 
 
-function playNote(note, velocity) {
+function start() {
 
-   scsynth.send.msg(['/s_new', 'i_sin_note', lastNodeID, 0, 0, [ 0, 0, note, 1, velocity ]]);
+   // require('electron').remote.getGlobal('sharedObject').currentNote = note;
 
-   synths[lastNodeID] = {};
 
-   synths[lastNodeID]["note"] = note;
-   synths[lastNodeID]["synthdef"] = "i_sin_note";
+   // App Architecture:
 
-   lastNodeID++;
+   nodeController = new NodeController();
+   sessionController = new SessionController();
+
+   sessionController.loadSession('default')
+
+   createWindow();
+
+
+//    startSC();
+//    startMIDI();
+//    startSynths();
+//    startOSC();
+
+}
+
+
+function createWindow () {
+   // Create the browser window.
+   win = new BrowserWindow({width: 1600, height: 800})
+
+   // and load the index.html of the app.
+
+   win.loadURL(`file://${__dirname}/test.html`)
+
+   // Open the DevTools.
+   // win.webContents.openDevTools()
+
+   // Emitted when the window is closed.
+   win.on('closed', () => {
+      // Dereference the window object, usually you would store windows
+      // in an array if your app supports multi windows, this is the time
+      // when you should delete the corresponding element.
+      win = null
+   })
+
+
+   // console.log("contents", win)
+
 
 }

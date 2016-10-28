@@ -23,7 +23,9 @@
     "midi": "^0.9.5",
     "nanotimer": "^0.3.14",
     "node-notifier": "^4.6.1",
-    "supercolliderjs": "^0.12.0"
+    "osc": "^2.1.0",
+    "supercolliderjs": "^0.12.0",
+    "touches": "^1.2.0"
   },
   "scripts": {
     "test": "gulp ",

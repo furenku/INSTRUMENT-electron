@@ -1,0 +1,141 @@
+
+function startSynths() {
+   synths = {};
+   lastNodeID = 0;
+};
+
+
+function startOSC() {
+
+   var oscPort = new osc.WebSocketPort({
+       url: "ws://localhost:8081" // URL to your Web Socket server.
+   });
+
+   //Opening the Port:
+
+   oscPort.open();
+
+   //Listening for incoming OSC messages:
+
+   oscPort.on("message", function (oscMsg) {
+       console.log("An OSC message just arrived!", oscMsg);
+   });
+
+   //Sending OSC messages:
+
+   // For most Ports, send() should only be called after the "open" event fires.
+   oscPort.send({
+       address: "/carrier/frequency",
+       args: 440
+   });
+
+}
+
+
+
+
+function startMIDI() {
+
+   var input = new midi.input();
+   var output = new midi.output();
+
+   // Count the available input ports.
+   input.getPortCount();
+
+   // Get the name of a specified input port.
+   input.getPortName(0);
+
+   // Configure a callback.
+   input.on('message', function(deltaTime, message) {
+
+      var note = message[1];
+      var velocity = parseInt(message[2]);
+
+      if ( velocity > 0 ) {
+
+         console.log('midi-note-on',note)
+
+         playNote(note,velocity);
+
+         win.webContents.send('midi-note-on' , { note: note, velocity: velocity })
+//         app.emit('midi-note-on',note)
+
+      } else {
+
+         win.webContents.send('midi-note-off' , { note: note })
+
+      }
+
+
+
+   });
+
+
+   ipcMain.on('gui-note-on', (event, arg) => {
+     console.log("gui-note-on", arg.note )  // prints "ping"
+     playNote(arg.note,arg.velocity);
+
+   })
+
+   // input.openPort(0);
+
+
+   output.getPortCount();
+   output.getPortName(0);
+   // output.openPort(0);
+
+   output.sendMessage([176,22,1]);
+
+   input.openVirtualPort("INSTRUMENT");
+   output.openVirtualPort("INSTRUMENT");
+
+}
+
+function startSC() {
+
+
+
+   sc.server.boot()
+   .then(function(server) {
+      scsynth = server;
+      // server.send.msg(['/s_new', 'i_test1', (Math.floor(Math.random()*300))]);
+
+
+      server.callAndResponse(sc.msg.status())
+      .then(function(reply) {
+         //console.log(reply.rcvosc);
+
+      });
+
+      server.on('OSC', function(msg) {
+         console.log();(msg)
+         if(msg[0]==='/n_end') {
+
+            console.log( "msg:", msg );
+            console.log( "synths:", synths );
+            console.log( "synth:", synths[ msg[1] ] );
+
+            win.webContents.send('midi-note-off' , { note: synths[ msg[1] ][ "note" ] })
+
+            synths[ msg[1] ] = 0;
+
+         }
+      });
+
+   });
+
+}
+
+
+function playNote(note, velocity) {
+
+   scsynth.send.msg(['/s_new', 'i_sin_note', lastNodeID, 0, 0, [ 0, 0, note, 1, velocity ]]);
+
+   synths[lastNodeID] = {};
+
+   synths[lastNodeID]["note"] = note;
+   synths[lastNodeID]["synthdef"] = "i_sin_note";
+
+   lastNodeID++;
+
+}
