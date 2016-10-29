@@ -43,9 +43,17 @@ Saves and Loads sessions' data.
 #SuperCollider
 
 ##Audio Outputs
+
 SynthDef Name: '\INSTRUMENToutput'
 
 - inBus (default: 0)
 - outBus (default: 0)
 - amp (default: 1)
 - pan (default: 0)
+
+
+SynthDef Name: '\INSTRUMENTmixerChannel'
+
+- Checks and Cleans Bad Values.
+- Code taken from ddwMixerChannel
+··* ( https://github.com/supercollider-quarks/ddwMixerChannel/blob/master/MixerChannelDef.sc )

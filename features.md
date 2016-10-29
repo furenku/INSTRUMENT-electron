@@ -1,14 +1,21 @@
-##Done:
+## Done:
 
 - MIDI note input
-- Basic GUI - App communication
 
-## Next:
+
+## In progress:
 
 
 - Stereo Output 16 channel Mixer
 
 - Node based system: Audio and Logic
+
+
+## To Do:
+
+- SynthDef selection
+
+- Preset storage / retrieval
 
 - Input to Parameter assignment
 
@@ -25,10 +32,6 @@
 - Record Actions and Playback
 
 - OSC input
-
-
-- SynthDef selection
-- Preset storage / retrieval
 
 - Multiple Instruments
 - Multiple MIDI inputs
