@@ -1,6 +1,16 @@
 #To-Do
 
+- Translate SC node structure to JS
+
 - Create GUI for Audio Mixer
+
+- GUI for controller representation (interactive)
+
+- Visual mapping of Control Input to Parameter
+
+- Multiple Controllers connected to different Instruments
+
+- SynthDef selection
 
 - Review ipcRenderer/ipcMain based structure vs socket.io or other
 
@@ -8,6 +18,8 @@
 - Implement Node Insert/Remove/Reconnect GUI
 
 Done:
+
+- Created FX SynthDefs: Reverb and Distortion: tested with Groups
 
 - Created Input, Output and MixerChannel SynthDefs
 

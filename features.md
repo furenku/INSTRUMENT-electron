@@ -38,8 +38,13 @@
 - Multiple OSC inputs
 
 
+- API for control/display surfaces:
+-- test surface: Novation Launchpad
+
 - Arduino input
 - Arduino input
+
+
 
 
 ## Reviewing:
